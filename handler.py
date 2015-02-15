@@ -4,6 +4,7 @@ logging.basicConfig(level=logging.DEBUG, format="%(asctime)s: %(name)s - %(messa
 
 from array import array
 import threading
+import errno
 import socket
 import time
 import sys
@@ -13,10 +14,19 @@ PORT = 42001
 HOST = '127.0.0.1'
 BUFFER_SIZE = 512
 
-print("Connecting...")
-scratchSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-scratchSock.connect((HOST, PORT))
-print("Connected!")
+logging.info("Connecting...")
+connected = False
+while connected == False:
+    try:
+        scratchSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        scratchSock.connect((HOST, PORT))
+        connected = True
+    except:
+        logging.warn('Connection failed, retrying, is Scratch Started?')
+        connected = False
+        time.sleep(1)
+scratchSock.setblocking(False)
+logging.info("Connected!")
 
 # will hold all plugins
 handlers = []
@@ -39,7 +49,7 @@ for plugin in plugins.__all__:
         handler = pluginClass(scratchSock)
         handlers.append(handler)
 
-print 'Found plugins:', handlers
+logging.info('Found plugins: %s' % handlers)
 
 class ScratchListener(threading.Thread):
     socket = None
@@ -48,15 +58,31 @@ class ScratchListener(threading.Thread):
     def __init__(self, socket, plugins):
         threading.Thread.__init__(self)
         self.socket = socket
+        self._stop = threading.Event()
         self.plugins = plugins
 
     def run(self):
         logging.debug("Started listening")
-        while True:
-            data = scratchSock.recv(BUFFER_SIZE).strip()
-            logging.debug("Received: %s", data)
-            for plugin in self.plugins:
-                plugin.receive(data)
+        while self.stopped() == False:
+            try:
+                data = scratchSock.recv(BUFFER_SIZE)
+                # if we got any double messages, split them
+                data = data.split('broadcast')
+
+                for msg in data:
+                    if len(msg.strip()) > 0:
+                        logging.debug("Received: %s", msg)
+                        for plugin in self.plugins:
+                            plugin.receive(msg)
+            except (KeyboardInterrupt, SystemExit):
+                logging.warn("Thread received SystemExit")
+                raise
+            except socket.error, e:
+                if e.args[0] == errno.EWOULDBLOCK: 
+                    time.sleep(0.1)           # short delay, no tight loops
+                else:
+                    print e
+                    break
 
     def stop(self):
         self._stop.set()
@@ -64,17 +90,18 @@ class ScratchListener(threading.Thread):
     def stopped(self):
         return self._stop.isSet()
 
-
-
 listener = ScratchListener(scratchSock, handlers)
 listener.start()
 
 try:
     while True:
+        logging.info('Tick')
         for plugin in handlers:
             plugin.tick()
         time.sleep(1)
 except:
+    logging.info('Cleaning up...')
     listener.stop()
-    # listener.join()
+    listener.join(0)
+    logging.debug('Stopped')
     sys.exit()
