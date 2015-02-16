@@ -15,7 +15,7 @@ class GPIOPlugin(PluginBase):
     socket = None
     available = [3,5,7,8,10,11,12,13,15,16,18,19,21,22,23,24,26]
 
-    def __init__(cls, socket):
+    def __init__(self, socket):
         logger.debug("Initializing...")
         if supported == False:
             logger.info("This CPU is not supported, ignoring messages")
@@ -72,9 +72,7 @@ class GPIOPlugin(PluginBase):
             logger.debug("Setting Pin %s to %s" % (no, value))
             # if we're sending data, mark this channel as output
             pyGPIO.setup(no, pyGPIO.OUT)
-            self.pins[no]['state'] = pyGPIO.OUT
             fooGPIO.output(no, value)
         else:
             self.pins[no]['state'] = pyGPIO.IN
-            pyGPIO.setup(no, pyGPIO.IN)
             fooGPIO.input(no)
