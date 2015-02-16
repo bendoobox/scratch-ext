@@ -44,10 +44,14 @@ for plugin in plugins.__all__:
     module = importlib.import_module("plugins.%s" % plugin)
     pluginClassName = dir(module)[0]
 
-    pluginClass = getattr(module, pluginClassName)
-    if issubclass(pluginClass, PluginBase):
-        handler = pluginClass(scratchSock)
-        handlers.append(handler)
+    try:
+        pluginClass = getattr(module, pluginClassName)
+        if issubclass(pluginClass, PluginBase):
+            handler = pluginClass(scratchSock)
+            handlers.append(handler)
+    except:
+        # ignore any errors
+        pass
 
 logging.info('Found plugins: %s' % handlers)
 
