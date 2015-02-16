@@ -72,7 +72,7 @@ class GPIOPlugin(PluginBase):
             logger.debug("Setting Pin %s to %s" % (no, value))
             # if we're sending data, mark this channel as output
             pyGPIO.setup(no, pyGPIO.OUT)
-            fooGPIO.output(no, value)
+            pyGPIO.output(no, value)
         else:
-            self.pins[no]['state'] = pyGPIO.IN
-            fooGPIO.input(no)
+            pyGPIO.setup(no, pyGPIO.IN)
+            pyGPIO.input(no)
