@@ -15,12 +15,8 @@ class PluginBase(object):
     def receive(self, message):
         pass
 
-    def send(self, message):
-        n = len(message)
-        a = array('c')
-        a.append(chr((n >> 24) & 0xFF))
-        a.append(chr((n >> 16) & 0xFF))
-        a.append(chr((n >>  8) & 0xFF))
-        a.append(chr(n & 0xFF))
-        self.socket.send(a.tostring() + message)
-
+   def send(self, cmd):
+        n = len(cmd)
+        b = (chr((n >> 24) & 0xFF)) + (chr((n >> 16) & 0xFF)) + (chr((n >>  8) & 0xFF)) + (chr(n & 0xFF))
+        logger.debug('sending: %s' % cmd)
+        return self.socket.send(b + cmd)
