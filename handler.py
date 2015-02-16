@@ -1,5 +1,6 @@
 #!/usr/bin/env python -u
 import logging
+import traceback
 logging.basicConfig(level=logging.DEBUG, format="%(asctime)s: %(name)s - %(message)s")
 
 from array import array
@@ -104,6 +105,9 @@ try:
             plugin.tick()
         time.sleep(1)
 except:
+    e = sys.exc_info()[0]
+    traceback.print_exc()
+finally:
     logging.info('Cleaning up...')
     listener.stop()
     listener.join(0)
