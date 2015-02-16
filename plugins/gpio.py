@@ -33,6 +33,7 @@ class GPIOPlugin(PluginBase):
     def receive(self, message):
         if not supported:
             return False
+
         # check if we need to process this command
         if any(command in message for command in self.commands):
             logger.debug('acting on: %s' % message)
@@ -43,7 +44,7 @@ class GPIOPlugin(PluginBase):
             if matches:
                 self.pin(no=matches.groupdict(0)['no'], value=matches.groupdict(0)['value'])
         else:
-            logger.debug('ignoring: %s' % message)
+            logger.debug('ignoring: %s' % message.strip())
 
     def tick(self):
         if not supported:
