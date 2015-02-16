@@ -23,12 +23,13 @@ class GPIOPlugin(PluginBase):
             pyGPIO.setmode(pyGPIO.BOARD)
             pyGPIO.setwarnings(False)
             pyGPIO.cleanup()
+            self._initpins()
             self.socket = socket
             logger.info("Initialized succesful")
 
-    def _initpins():
+    def _initpins(self):
         for pin in self.available:
-            self.pins[pin] = {type: pyGPIO.PUNUSED, state: None}
+            self.pins[pin] = {'type': None, 'state': None}
 
     def receive(self, message):
         if not supported:
