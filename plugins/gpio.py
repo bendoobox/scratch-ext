@@ -18,7 +18,7 @@ class GPIOPlugin(PluginBase):
     def __init__(self, socket):
         logger.debug("Initializing...")
         if supported == False:
-            logger.info("This CPU is not supported, ignoring messages")
+            logger.warn("This CPU is not supported, ignoring messages")
         else:
             pyGPIO.setmode(pyGPIO.BOARD)
             pyGPIO.setwarnings(False)
@@ -28,7 +28,7 @@ class GPIOPlugin(PluginBase):
 
     def _initpins():
         for pin in self.available:
-            self.pins[pin] = {type: self.PUNUSED, state: None}
+            self.pins[pin] = {type: pyGPIO.PUNUSED, state: None}
 
     def receive(self, message):
         if not supported:
@@ -52,14 +52,11 @@ class GPIOPlugin(PluginBase):
         # check all pin states
         for no, pin in self.pins.items():
             if pin.type != pyGPIO.OUT:
-                cmd = 'sensor-update "pin %s" %s' % (no, self.pin(no))
-                self.send(cmd)
-
-    def send(cmd):
-        n = len(cmd)
-        b = (chr((n >> 24) & 0xFF)) + (chr((n >> 16) & 0xFF)) + (chr((n >>  8) & 0xFF)) + (chr(n & 0xFF))
-        logger.debug('sending: %s' % cmd)
-        return self.socket.send(b + cmd)
+                state = self.pin(no)
+                if pin['state'] != state:
+                    self.pins[no]['state'] = state
+                    cmd = 'sensor-update "pin %s" %s' % (no, state)
+                    self.send(cmd)
 
     def pin(self, no, value=None):
         no = int(no)
@@ -72,8 +69,11 @@ class GPIOPlugin(PluginBase):
                 value = False
             logger.debug("Setting Pin %s to %s" % (no, value))
             # if we're sending data, mark this channel as output
+            self.pins[no]['type'] = pyGPIO.OUT
             pyGPIO.setup(no, pyGPIO.OUT)
             pyGPIO.output(no, value)
         else:
+            self.pins[no]['type'] = pyGPIO.IN
             pyGPIO.setup(no, pyGPIO.IN)
-            pyGPIO.input(no)
+
+            return pyGPIO.input(no)
