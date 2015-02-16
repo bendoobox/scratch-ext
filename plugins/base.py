@@ -4,8 +4,7 @@ class PluginBase(object):
     available = False
     socket = None
 
-    def __init__(cls, socket):
-        threading.Thread.__init__(self)
+    def __init__(self, socket):
         self.socket = socket
         # do setup stuff
         pass
