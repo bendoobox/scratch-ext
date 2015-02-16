@@ -1,5 +1,5 @@
-# sudo pkill -f scratch_gpio_handler
-# sudo pkill -f scratchgpio_handler
-# cd /home/pi/scratchgpio5
-# sudo python scratchgpio_handler5.py &
-# scratch --document "/home/pi/Documents/Scratch Projects/rsc.sb" 
+#!/usr/bin/env bash
+sudo pkill -f handler 
+DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+sudo python "$DIR/handler.py" &
+scratch --document "$DIR/default.sb"
