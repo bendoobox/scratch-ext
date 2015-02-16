@@ -52,7 +52,7 @@ class GPIOPlugin(PluginBase):
             return False
         # check all pin states
         for no, pin in self.pins.items():
-            if pin.type != pyGPIO.OUT:
+            if pin['type'] != pyGPIO.OUT:
                 state = self.pin(no)
                 if pin['state'] != state:
                     self.pins[no]['state'] = state
@@ -65,9 +65,9 @@ class GPIOPlugin(PluginBase):
             high = ['on','1', 'high']
             low = ['off','0','low']
             if value in high:
-                value = True
+                value = pyGPIO.HIGH
             if value in low:
-                value = False
+                value = pyGPIO.LOW
             logger.debug("Setting Pin %s to %s" % (no, value))
             # if we're sending data, mark this channel as output
             self.pins[no]['type'] = pyGPIO.OUT

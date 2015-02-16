@@ -1,4 +1,6 @@
 import threading
+import logging
+logger = logging.getLogger(__name__)
 
 class PluginBase(object):
     available = False
@@ -15,7 +17,7 @@ class PluginBase(object):
     def receive(self, message):
         pass
 
-   def send(self, cmd):
+    def send(self, cmd):
         n = len(cmd)
         b = (chr((n >> 24) & 0xFF)) + (chr((n >> 16) & 0xFF)) + (chr((n >>  8) & 0xFF)) + (chr(n & 0xFF))
         logger.debug('sending: %s' % cmd)
