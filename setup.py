@@ -15,7 +15,7 @@ except:
 
 setup(
     name = 'scratch-ext',
-    version = '0.5.5',
+    version = '0.5.6',
     description='Access external Scratch sensors and endpoints through python',
     long_description=README,
     author = 'Sander van de Graaf',
