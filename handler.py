@@ -3,7 +3,7 @@ import logging
 import traceback
 logging.basicConfig(level=logging.DEBUG, format="%(asctime)s: %(name)s - %(message)s")
 
-from array import array
+import select
 import threading
 import errno
 import socket
@@ -14,6 +14,7 @@ import importlib
 PORT = 42001
 HOST = '127.0.0.1'
 BUFFER_SIZE = 512
+exitcode = 0
 
 logging.info("Connecting...")
 connected = False
@@ -101,10 +102,15 @@ listener.start()
 try:
     while True:
         logging.info('Tick')
+        
+        # check if connection is still up
+        select.select([scratchSock,], [scratchSock,], [], 1)
+
         for plugin in handlers:
             plugin.tick()
         time.sleep(1)
 except:
+    exitcode = 1
     e = sys.exc_info()[0]
     traceback.print_exc()
 finally:
@@ -112,4 +118,4 @@ finally:
     listener.stop()
     listener.join(0)
     logging.debug('Stopped')
-    sys.exit()
+    sys.exit(exitcode)
