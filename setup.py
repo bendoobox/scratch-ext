@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 from setuptools import setup, find_packages
 
+print find_packages()
+
 try:
     README = open('README.md').read()
 except:
@@ -13,14 +15,14 @@ except:
 
 setup(
     name = 'scratch-ext',
-    version = '0.5.1',
+    version = '0.5.4',
     description='Access external Scratch sensors and endpoints through python',
     long_description=README,
     author = 'Sander van de Graaf',
     author_email = 'mail@svdgraaf.nl',
     license = LICENSE,
     url = 'http://github.com/bendoobox/scratch-ext/',
-    packages = find_packages(),
+    packages = ['scratch-ext'],
     include_package_data=True,
     classifiers=[
         'Development Status :: 4 - Beta',
