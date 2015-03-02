@@ -1,5 +1,5 @@
-# scratch-gpio
-Access the Raspberry Pi GPIO ports in Scratch.
+# scratch-ext
+Access external locations (eg: GPIO) from scratch on the Raspberry Pi
 
 # Running
 Clone the repo (or download the .tar.gz). Move the .desktop file to your desktop, and start from there, or run from a terminal inside X:
