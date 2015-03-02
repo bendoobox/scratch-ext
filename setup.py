@@ -13,7 +13,7 @@ except:
 
 setup(
     name = 'scratch-ext',
-    version = '0.5.11',
+    version = '0.6.1',
     description='Access external Scratch sensors and endpoints through python',
     long_description=README,
     author = 'Sander van de Graaf',
@@ -23,6 +23,7 @@ setup(
     packages = ['scratch-ext'],
     data_files = [
         ('/usr/share/applications/', ['python-scratch-ext.desktop'])
+        ('/home/pi/Desktop/', ['python-scratch-ext.desktop']) # only needed for raspbian, this should move to postinst
     ],
     include_package_data=True,
     classifiers=[
