@@ -41,7 +41,7 @@ class GPIOPlugin(PluginBase):
             message = message.replace('broadcast ', '')
             message = message.replace('"','')
             message = message.lower()
-            matches = re.search('(pin|gpio)\s?(?P<no>[0-9]+).(?P<value>on|1|off|0|high|low)', str(message.strip()))
+            matches = re.search('(pin|gpio) ?(?P<no>[0-9]+).(?P<value>on|1|off|0|high|low)', str(message.strip()))
             if matches:
                 self.pin(no=matches.groupdict(0)['no'], value=matches.groupdict(0)['value'])
         else:
