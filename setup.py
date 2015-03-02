@@ -22,7 +22,7 @@ setup(
     url = 'http://github.com/bendoobox/scratch-ext/',
     packages = ['scratch-ext'],
     data_files = [
-        ('/usr/share/applications/', ['scratch-ext.desktop'])
+        ('/usr/share/applications/', ['python-scratch-ext.desktop'])
     ],
     include_package_data=True,
     classifiers=[
