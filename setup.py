@@ -22,7 +22,7 @@ setup(
     url = 'http://github.com/bendoobox/scratch-ext/',
     packages = ['scratch-ext'],
     data_files = [
-        ('/usr/share/applications/', ['python-scratch-ext.desktop'])
+        ('/usr/share/applications/', ['python-scratch-ext.desktop']),
         ('/home/pi/Desktop/', ['python-scratch-ext.desktop']) # only needed for raspbian, this should move to postinst
     ],
     include_package_data=True,
