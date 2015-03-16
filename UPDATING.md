@@ -10,4 +10,4 @@ On deb host
  * python setup.py --command-packages=stdeb.command bdist_deb
  * mv deb_dist/*.deb [repo_dir]/dists/bendoobox/main/binary-armhf/.
  * cd [repo_dir]
- * sudo dpkg-scanpackages dists /dev/null > /tmp/Packages;bzip2 -f /tmp/Packages;sudo mv /tmp/Packages.bz2 ./dists/bendoobox/main/binary-armhf/.
+ * sudo dpkg-scanpackages dists /dev/null > /tmp/Packages;bzip2 -f /tmp/Packages;sudo mv /tmp/Packages.bz2 ./dists/bendoobox/rpi/binary-armhf/.
