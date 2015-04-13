@@ -38,6 +38,8 @@ import plugins
 from plugins.base import PluginBase
 import inspect
 
+last_response = 0
+
 noload = ['__init__', 'base']
 for plugin in plugins.__all__:
     if plugin in noload:
@@ -71,6 +73,9 @@ class ScratchListener(threading.Thread):
         logging.debug("Started listening")
         while self.stopped() == False:
             try:
+                # reset the disconnect counter
+                last_response = 0
+
                 data = scratchSock.recv(BUFFER_SIZE)
                 # if we got any double messages, split them
                 data = data.split('broadcast')
@@ -102,13 +107,18 @@ listener.start()
 try:
     while True:
         logging.info('Tick')
-        
+
         # check if connection is still up
         select.select([scratchSock,], [scratchSock,], [], 1)
+        if last_response > 15:
+            raise Exception('Disconnected?')
 
         for plugin in handlers:
             plugin.tick()
         time.sleep(1)
+
+        # if the connection is lost, this counter will increase
+        last_response += 1
 except:
     exitcode = 1
     e = sys.exc_info()[0]
