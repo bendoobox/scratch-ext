@@ -108,7 +108,19 @@ try:
         logging.info('Tick')
 
         # check if connection is still up
-        select.select([scratchSock,], [scratchSock,], [], 1)
+        try:
+            ready_to_read, ready_to_write, in_error = select.select([scratchSock,], [scratchSock,], [], 1)
+            n = len("tick")
+            b = (chr((n >> 24) & 0xFF)) + (chr((n >> 16) & 0xFF)) + (chr((n >>  8) & 0xFF)) + (chr(n & 0xFF))
+            scratchSock.send(b + "tick")
+        except:
+            logging.info('Socket failed, disconnecting...')
+            raise Exception('Disconnected')
+
+        # if the connection is in an error state, bail out
+        if in_error:
+            logging.info('Socket is in error state, disconnecting...')
+            raise Exception('Disconnected')
 
         for plugin in handlers:
             plugin.tick()
