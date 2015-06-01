@@ -13,7 +13,7 @@ class GPIOPlugin(PluginBase):
     commands = ['gpio', 'pin']
     pins = {}
     socket = None
-    available = [3,5,7,8,10,11,12,13,15,16,18,19,21,22,23,24,26]
+    available = [3,5,7,8,10,11,12,13,15,16,18,19,21,22,23,24,26,32,36,38,40,29,31,33,35,37 ]
 
     def __init__(self, socket):
         logger.debug("Initializing...")
