@@ -54,6 +54,9 @@ class I2CPlugin(PluginBase):
             logger.debug('ignoring: %s' % message.strip())
 
     def tick(self):
+        # make sure we check the socket
+        super(I2CPlugin, self).tick()
+
         if not supported or len(self.devices) == 0:
             return False
         # Loop through all device address which were read, and update

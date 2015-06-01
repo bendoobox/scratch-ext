@@ -48,6 +48,9 @@ class GPIOPlugin(PluginBase):
             logger.debug('ignoring: %s' % message.strip())
 
     def tick(self):
+        # make sure we check the socket
+        super(GPIOPlugin, self).tick()
+
         if not supported:
             return False
         # check all pin states

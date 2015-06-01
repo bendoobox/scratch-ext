@@ -1,5 +1,6 @@
 import threading
 import logging
+import select
 logger = logging.getLogger(__name__)
 
 class PluginBase(object):
@@ -12,7 +13,10 @@ class PluginBase(object):
         pass
 
     def tick(self):
-        pass
+        try:
+            select.select([self.socket,], [self.socket,], [], 1)
+        except:
+            raise Exception('Socket disconnected')
 
     def receive(self, message):
         pass
