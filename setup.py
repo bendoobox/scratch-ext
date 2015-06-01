@@ -6,14 +6,14 @@ try:
 except:
     README = None
 
-try: 
+try:
     LICENSE = open('LICENSE').read()
-except: 
+except:
     LICENSE = None
 
 setup(
     name = 'scratch-ext',
-    version = '0.7.6',
+    version = '0.7.7',
     description='Access external Scratch sensors and endpoints through python',
     long_description=README,
     author = 'Sander van de Graaf',
